@@ -13,4 +13,4 @@ spec:
       # name: http
       nodePort: {{ .Values.service.nodePort }}
   selector:
-    {{- include "reverse-app-chart.selectorLabels" . | nindent 4 }}
+    reverse-app-chart
