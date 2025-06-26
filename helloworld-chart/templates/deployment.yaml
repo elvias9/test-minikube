@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "helloworld-chart.fullname" . }}
+  name: helloworld-chart
   labels:
     {{- include "helloworld-chart.labels" . | nindent 4 }}
 spec:

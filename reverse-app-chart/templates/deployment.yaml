@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "reverse-app-chart.fullname" . }}
+  name: reverse-app-chart
   labels:
     {{- include "reverse-app-chart.labels" . | nindent 4 }}
 spec:
@@ -10,7 +10,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "reverse-app-chart.selectorLabels" . | nindent 6 }}
+      reverse-app-chart
   template:
     metadata:
       {{- with .Values.podAnnotations }}
