@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: helloworld-chart
   labels:
-    {{- include "helloworld-chart.labels" . | nindent 4 }}
+    helloworld-chart
 spec:
   type: {{ .Values.service.type }}
   ports:

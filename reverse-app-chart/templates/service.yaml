@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: reverse-app-chart
   labels:
-    {{- include "reverse-app-chart.labels" . | nindent 4 }}
+    reverse-app-chart
 spec:
   type: {{ .Values.service.type }}
   ports:
