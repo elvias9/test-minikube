@@ -4,10 +4,10 @@ const app = express();
 const PORT = 3000;
 
 
-const SOURCE_URL = 'http://hello-world:4000/';
+//const SOURCE_URL = 'http://hello-world:4000/';
 
 //const SOURCE_URL = 'http://localhost:4000/';
-// const SOURCE_URL = process.env.SOURCE_URL || 'http://localhost:4000/';
+const SOURCE_URL = process.env.SOURCE_URL || 'http://hello-world:4000/';
 
 app.use(express.json());
 
