@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reverse-app
+spec:
+  replicas: {{ .Values.reverseApp.replicaCount }}
+  selector:
+    matchLabels:
+      app: reverse-app
+  template:
+    metadata:
+      labels:
+        app: reverse-app
+    spec:
+      containers:
+        - name: reverse-app
+          image: {{ .Values.reverseApp.image.repository }}
+          imagePullPolicy: {{ .Values.reverseApp.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.reverseApp.port }}
+          env:
+            - name: SOURCE_URL
+              value: {{ .Values.reverseApp.env.sourceurl }}

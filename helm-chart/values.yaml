@@ -1,0 +1,17 @@
+helloworldApp:
+  replicaCount: 1
+  image:
+    repository: testelvi/hello-world
+    pullPolicy: IfNotPresent
+    tag: "1.0"
+  port: 4000
+
+reverseApp:
+  replicaCount: 1
+  image:
+    repository: testelvi/reverse-app
+    pullPolicy: IfNotPresent
+    tag: "1.0"
+  port: 3000
+  env:
+    sourceurl: http://hello-world:4000
