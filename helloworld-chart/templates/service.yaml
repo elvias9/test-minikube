@@ -10,7 +10,7 @@ spec:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.targetPort }}
       protocol: TCP
-      # name: http
-      nodePort: {{ .Values.service.nodePort }}
+      name: http
+      # nodePort: {{ .Values.service.nodePort }}
   selector:
     {{- include "helloworld-chart.selectorLabels" . | nindent 4 }}

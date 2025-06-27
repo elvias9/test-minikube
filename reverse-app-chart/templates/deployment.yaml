@@ -41,12 +41,12 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            # - name: http
+            - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           env:
             - name: SOURCE_URL
-              value: http://hello-world:4000
+              value: {{ .Values.env.sourceurl }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
