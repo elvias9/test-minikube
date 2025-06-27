@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: reverse-app-chart
+  name: {{ include "reverse-app-chart.fullname" . }}
   labels:
-    reverse-app-chart
+    {{- include "reverse-app-chart.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -13,4 +13,5 @@ spec:
       # name: http
       nodePort: {{ .Values.service.nodePort }}
   selector:
-    reverse-app-chart
+    {{- include "reverse-app-chart.selectorLabels" . | nindent 4 }}
+
