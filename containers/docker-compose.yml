@@ -1,21 +1,22 @@
 version: "3.0"
 services:
   hello-world:
-    container_name: hello-world
+    # container_name: hello-world
     build:
       dockerfile: Dockerfile
       context: "./hello_world_server"
-    ports:
-      - "4000:4000"
-    # restart: always
+    image: hello-world:1.0
+    # ports:
+    #   - "4000:4000"
+
   reverse-app:
-    container_name: reverse-app 
+    #container_name: reverse-app 
     build:
       dockerfile: Dockerfile
       context: "./reverse_app"
-    ports:
-      - "3000:3000"
-    # restart: always
-    depends_on:
-      - hello-world
+    image: reverse-app:1.0
+    # ports:
+    #   - "3000:3000"
+    # depends_on:
+    #   - hello-world
 
