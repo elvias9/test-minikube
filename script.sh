@@ -46,40 +46,67 @@ echo "⏳ Wait for pods to be ready..."
 kubectl wait --for=condition=Ready pod -l app=hello-world --timeout=150s
 kubectl wait --for=condition=Ready pod -l app=reverse-app --timeout=150s
 
-# Step 6: Port-forward hello-world for local access
-echo "🌐 Set up port-forward to hello-world on localhost:4000..."
+# Step 6: Print HTTP responses of applications.
+declare -a pids=()
+
 kubectl port-forward service/hello-world 4000:4000 &
+pids+=($!)
 
-# Get the last background process
-pid=$!
-echo "Port forwarding started (PID: $pid)."
+kubectl port-forward service/reverse-app 3000:3000 &
+pids+=($!)
 
-# Test the hello-world server
-sleep 5
+echo "Started port-forwarding with PIDs: ${pids[*]}"
+
+# Print responses from servers
+sleep 10
 echo "🔁 Test hello-world endpoint..."
 curl http://localhost:4000/
-
-# Stop the port-forward
-echo "Stopping port-forward..."
-kill $pid
-echo "Port-forward stopped."
-
-# Step 7: Run Port-forward reverse-app for local access
-echo "🌐 Set up port-forward to reverse-app on localhost:3000..."
-kubectl port-forward service/reverse-app 3000:3000 &
-
-pf_pid=$!
-
-echo "Port forwarding started (PID: $pf_pid)."
-
-# Test the reverse-app server
-sleep 5
 echo "🔁 Test reverse-app endpoint..."
 curl http://localhost:3000
 
-# Stop the port-forward
-echo "Stopping port-forward..."
-kill $pf_pid
-echo "Port-forward stopped."
+# Kill all background port-forwards
+for pid in "${pids[@]}"; do
+    echo "Stopping port-forward PID $pid"
+    kill "$pid"
+done
+
+echo "All port-forwards stopped."
+
+
+# # Step 6: Port-forward hello-world for local access
+# echo "🌐 Set up port-forward to hello-world on localhost:4000..."
+# kubectl port-forward service/hello-world 4000:4000 &
+
+# # Get the last background process
+# pid=$!
+# echo "Port forwarding started (PID: $pid)."
+
+# # Test the hello-world server
+# sleep 5
+# echo "🔁 Test hello-world endpoint..."
+# curl http://localhost:4000/
+
+# # Stop the port-forward
+# echo "Stopping port-forward..."
+# kill $pid
+# echo "Port-forward stopped."
+
+# # Step 7: Run Port-forward reverse-app for local access
+# echo "🌐 Set up port-forward to reverse-app on localhost:3000..."
+# kubectl port-forward service/reverse-app 3000:3000 &
+
+# pf_pid=$!
+
+# echo "Port forwarding started (PID: $pf_pid)."
+
+# # Test the reverse-app server
+# sleep 5
+# echo "🔁 Test reverse-app endpoint..."
+# curl http://localhost:3000
+
+# # Stop the port-forward
+# echo "Stopping port-forward..."
+# kill $pf_pid
+# echo "Port-forward stopped."
 
 echo "✅ Deployment completed successfully!"
