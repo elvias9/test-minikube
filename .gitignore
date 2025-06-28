@@ -10,6 +10,9 @@
 node_modules/
 jspm_packages/
 
+#environment files
+.env
+
 # User-specific files
 *.rsuser
 *.suo

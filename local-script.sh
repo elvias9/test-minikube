@@ -2,7 +2,7 @@
 
 # Variables
 CHART_NAME="helm-chart"
-HELM_DIR="./helm-chart"
+HELM_DIR="./helm-local"
 NAMESPACE="default"
 
 # Stop execution if any command returns a non-zero exit status
@@ -26,29 +26,15 @@ else
 fi
 
 # Step 2: Set Docker env to Minikube
-#echo "🔧 Configure Docker to use Minikube's daemon..."
-#eval $(minikube docker-env)
+echo "🔧 Configure Docker to use Minikube's daemon..."
+eval $(minikube docker-env)
 
-# Step 2: Build Docker images
+# Step 3: Build Docker images
 echo "🐳 Build Docker images..."
 cd containers
-
 docker-compose build
 # docker build -t hello-world:1.0 . 
 # docker build -t reverse-app:1.0 . 
-
-# Load variables from .env file
-if [ -f .env ]; then
-    export $(grep -v '^#' .env | xargs)
-else
-    echo ".env file not found!"
-    _handle_error
-    #exit 1
-fi
-echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-
-docker push "$DOCKER_USERNAME"/hello-world:1.0
-docker push "$DOCKER_USERNAME"/reverse-app:1.0
 
 # Step 4: Helm install or upgrade
 echo "📦 Deploy Helm chart..."
