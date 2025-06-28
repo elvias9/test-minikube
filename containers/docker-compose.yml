@@ -5,7 +5,7 @@ services:
     build:
       dockerfile: Dockerfile
       context: "./hello_world_server"
-    image: hello-world:1.0
+    image: "${DOCKER_USERNAME}/hello-world:1.0"
     # ports:
     #   - "4000:4000"
 
@@ -14,7 +14,7 @@ services:
     build:
       dockerfile: Dockerfile
       context: "./reverse_app"
-    image: reverse-app:1.0
+    image: "${DOCKER_USERNAME}/reverse-app:1.0"
     # ports:
     #   - "3000:3000"
     # depends_on:

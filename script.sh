@@ -25,42 +25,38 @@ else
     echo "Minikube is "$minikube_status""
 fi
 
-# Step 2: Set Docker env to Minikube
-#echo "🔧 Configure Docker to use Minikube's daemon..."
-#eval $(minikube docker-env)
 
 # Step 2: Build Docker images
 echo "🐳 Build Docker images..."
 cd containers
 
 docker-compose build
-# docker build -t hello-world:1.0 . 
-# docker build -t reverse-app:1.0 . 
 
+# Step 3: Push images to Ducker Hub
 # Load variables from .env file
 if [ -f .env ]; then
-    export $(grep -v '^#' .env | xargs)
+    set -a && source .env && set +a
 else
     echo ".env file not found!"
     _handle_error
-    #exit 1
 fi
+
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 docker push "$DOCKER_USERNAME"/hello-world:1.0
 docker push "$DOCKER_USERNAME"/reverse-app:1.0
 
-# Step 4: Helm install or upgrade
+# Step 4: Deploy apps with helm install or upgrade
 echo "📦 Deploy Helm chart..."
 cd ..
 helm upgrade --install $CHART_NAME $HELM_DIR --namespace $NAMESPACE
 
-# Step 5: Wait for pods to be ready
+# Wait for pods to be ready
 echo "⏳ Wait for pods to be ready..."
 kubectl wait --for=condition=Ready pod -l app=hello-world --timeout=150s
 kubectl wait --for=condition=Ready pod -l app=reverse-app --timeout=150s
 
-# Step 6: Print HTTP responses of applications.
+# Step 5: Print HTTP responses of applications.
 declare -a pids=()
 
 cleanup() {
@@ -95,41 +91,4 @@ done
 
 echo "All port-forwards stopped."
 
-
-# # Step 6: Port-forward hello-world for local access
-# echo "🌐 Set up port-forward to hello-world on localhost:4000..."
-# kubectl port-forward service/hello-world 4000:4000 &
-
-# # Get the last background process
-# pid=$!
-# echo "Port forwarding started (PID: $pid)."
-
-# # Test the hello-world server
-# sleep 5
-# echo "🔁 Test hello-world endpoint..."
-# curl http://localhost:4000/
-
-# # Stop the port-forward
-# echo "Stopping port-forward..."
-# kill $pid
-# echo "Port-forward stopped."
-
-# # Step 7: Run Port-forward reverse-app for local access
-# echo "🌐 Set up port-forward to reverse-app on localhost:3000..."
-# kubectl port-forward service/reverse-app 3000:3000 &
-
-# pf_pid=$!
-
-# echo "Port forwarding started (PID: $pf_pid)."
-
-# # Test the reverse-app server
-# sleep 5
-# echo "🔁 Test reverse-app endpoint..."
-# curl http://localhost:3000
-
-# # Stop the port-forward
-# echo "Stopping port-forward..."
-# kill $pf_pid
-# echo "Port-forward stopped."
-
-echo "✅ Deployment completed successfully!"
+echo "✅ Script completed successfully!"
